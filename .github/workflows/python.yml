@@ -13,7 +13,7 @@ jobs:
         with:
           python-version: '3.12'
 
-      - step: Install dependancies
+      - name: Install dependencies
         run: |
           python - m pip install --upgrade pip
           pip install - r requirements.txt
