@@ -10,7 +10,6 @@ class MailhogApi:
         self.host = host
         self.headers = headers
 
-
     def get_api_v2_messages(
             self,
             limit=50
