@@ -11,7 +11,7 @@ def test_put_v1_account_email():
     login_api = LoginApi(host='http://5.63.153.31:5051')
     mailhog_api = MailhogApi(host='http://5.63.153.31:5025')
 
-    login = 'IM_test_e9'
+    login = 'IM_test_e14'
     email = f'{login}@mail.com'
     email_upd = f'{login}_upd@mail.com'
     password = 'pass123456'
@@ -27,7 +27,7 @@ def test_put_v1_account_email():
     response = account_api.post_v1_account(json_data=json_data)
     print(response.status_code, '  - User creation status code')
     print(response.text)
-    # assert response.status_code == 201, f"User wasn't created {response.json()}"
+    assert response.status_code == 201, f"User wasn't created {response.json()}"
 
     # -------Get mail from mail server
 
@@ -49,29 +49,27 @@ def test_put_v1_account_email():
 
     # ---Log in user
 
-    json_data = {
+    login_json_data = {
         'login': login,
         'password': password,
         'rememberMe': True,
     }
 
-    response = login_api.post_v1_account_login(json_data=json_data)
+    response = login_api.post_v1_account_login(json_data=login_json_data)
 
     print(response.status_code, ' - Login status code for', login)
     print(response.text)
     assert response.status_code == 200, "User didn't logged in"
 
-    # -------------------------------------------------------------------------
-
     #  -------Update email
 
-    json_data = {
+    change_mail_data = {
         'login': login,
         'email': f'{login}_upd@mail.com',
         'password': password,
-    }
 
-    response = account_api.put_v1_account_email(json_data=json_data)
+    }
+    response = account_api.put_v1_account_email(json_data=change_mail_data)
 
     print(response.status_code, ' - Update email status code')
     pprint.pprint(response.text)
@@ -79,13 +77,7 @@ def test_put_v1_account_email():
 
     # ---Log in 2 user after changing email
 
-    json_data = {
-        'login': login,
-        'password': password,
-        'rememberMe': True,
-    }
-
-    response = login_api.post_v1_account_login(json_data=json_data)
+    response = login_api.post_v1_account_login(json_data=login_json_data)
 
     print(response.status_code, ' - Login status code for', login, 'after email changing ')
     print(response.text)
@@ -98,21 +90,11 @@ def test_put_v1_account_email():
     assert response.status_code == 200, "Mails not received"
 
     #  -------Get activation token after changing mail
-    # email_upd = f'{login}_upd@mail.com',
 
-    json_data = {
-        'login': login,
-        'email_upd': f'{login}_upd@mail.com',
-        'password': password,
-    }
-
-    token = get_activation_token_by_login_after_changing_mail(
-        login,
-        email_upd,
-        response
-    )
+    token = get_activation_token_by_login_after_changing_mail(login, email_upd, response)
 
     #  -------Activate user after changing email
+
     response = account_api.put_v1_account_token(token)
 
     print(response.status_code, ' - User', login, ' activation status code')
@@ -121,13 +103,7 @@ def test_put_v1_account_email():
 
     # ---Log in 3 user after changing email and new activation
 
-    json_data = {
-        'login': login,
-        'password': password,
-        'rememberMe': True,
-    }
-
-    response = login_api.post_v1_account_login(json_data=json_data)
+    response = login_api.post_v1_account_login(json_data=login_json_data)
     print(response.status_code, ' - Login status code for', login)
     print(response.text)
     assert response.status_code == 200, "User didn't logged in"
@@ -138,7 +114,7 @@ def get_activation_token_by_login(
         response
 ):
     for item in response.json()['items']:
-        user_data = (loads(item['Content']['Body']))
+        user_data = loads(item['Content']['Body'])
         user_login = user_data['Login']
         if user_login == login:
             token = user_data['ConfirmationLinkUrl'].split('/')[-1]
@@ -152,14 +128,13 @@ def get_activation_token_by_login_after_changing_mail(
         response
 ):
     for item in response.json()['items']:
-        mail_to = (item['Raw']['To'][0])
+        mail_to = item['Raw']['To'][0]
         if mail_to == email_upd:
-            user_data = (loads(item['Content']['Body']))
-            user_data = (loads(item['Content']['Body']))
+            user_data = loads(item['Content']['Body'])
             user_login = user_data['Login']
 
             if user_login == login:
                 token = user_data['ConfirmationLinkUrl'].split('/')[-1]
-                print('for user=', login,  'user current mail=', mail_to, 'token=' , token,)
+                print('for user=', login, 'user current mail=', mail_to, 'token=', token, )
                 break
     return token

@@ -11,7 +11,7 @@ def test_put_v1_account_token():
     login_api = LoginApi(host='http://5.63.153.31:5051')
     mailhog_api = MailhogApi(host='http://5.63.153.31:5025')
 
-    login = 'IM_test_t2'
+    login = 'IM_test_t4'
     email = f'{login}@mail.com'
     password = 'pass123456'
 
@@ -47,13 +47,13 @@ def test_put_v1_account_token():
 
     # ---Log in user
 
-    json_data = {
+    login_json_data = {
         'login': login,
         'password': password,
         'rememberMe': True,
     }
 
-    response = login_api.post_v1_account_login(json_data=json_data)
+    response = login_api.post_v1_account_login(json_data=login_json_data)
 
     print(response.status_code, ' - Login status code for', login)
     print(response.text)
