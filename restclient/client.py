@@ -6,22 +6,25 @@ import structlog
 import uuid
 import curlify
 
+from restclient.configuration import Configuration
+
 
 class RestClient:
     def __init__(
             self,
-            host,
-            headers=None
+            configuration: Configuration
     ):
-        self.host = host
-        self.headers = headers
+        self.host = configuration.host
+        self.headers = configuration.headers
+        self.disable_log = configuration.disable_log
         self.session = session()
         self.log = structlog.get_logger(__name__).bind(service='api')
 
     def post(
             self,
             path,
-            **kwargs,
+            **kwargs
+
     ):
         return self._send_request(method='POST', path=path, **kwargs)
 
@@ -52,8 +55,13 @@ class RestClient:
             method,
             **kwargs
     ):
+
         log = self.log.bind(event_id=str(uuid.uuid4()))
         full_url = self.host + path
+
+        if self.disable_log:
+            rest_response = self.session.request(method=method, url=full_url, **kwargs)
+            return rest_response
 
         log.msg(
             event='Request',
@@ -64,9 +72,7 @@ class RestClient:
             json=kwargs.get('json'),
             data=kwargs.get(' ')
         )
-
         rest_response = self.session.request(method=method, url=full_url, **kwargs)
-
         curl = curlify.to_curl(rest_response.request)
         print(curl)
 
