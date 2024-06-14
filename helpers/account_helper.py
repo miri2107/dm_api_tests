@@ -13,6 +13,7 @@ class AccountHelper:
         self.dm_account_api = dm_account_api
         self.mailhog = mailhog
 
+    #  ----- Register new user and activate him
     def register_new_user(
             self,
             login: str,
@@ -34,7 +35,6 @@ class AccountHelper:
         response = self.dm_account_api.account_api.put_v1_account_token(token=token)
         assert response.status_code == 200, "User not activated"
         return response
-
 
     #  Activate user after changing mail
     def activate_user_after_changing_mail(
@@ -58,7 +58,6 @@ class AccountHelper:
         response = self.dm_account_api.account_api.put_v1_account_token(token=token)
         assert response.status_code == 200, "User not activated"
         return response
-
 
     def user_login(
             self,
