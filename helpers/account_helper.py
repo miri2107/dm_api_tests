@@ -3,6 +3,11 @@ from json import loads
 
 from services.dm_api_account import DMApiAccount
 from services.api_mailhog import MailHogApi
+from retrying import retry
+
+
+def stop_after_3_attempts():
+    print("Stopping after 3 attempts")
 
 
 def retrier(
@@ -76,6 +81,7 @@ class AccountHelper:
         assert response.status_code == 200, "User not activated"
         return response
 
+    @retry(stop_max_attempt_number=3)
     def user_login(
             self,
             login: str,
@@ -88,6 +94,7 @@ class AccountHelper:
             'rememberMe': remember_me,
         }
         response = self.dm_account_api.login_api.post_v1_account_login(json_data=json_data)
+        assert response.status_code == 200, "User not logged in"
         return response
 
     @retrier
