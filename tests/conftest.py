@@ -68,7 +68,7 @@ def auth_account_helper(
     account = DMApiAccount(configuration=dm_api_configuration)
     account_helper = AccountHelper(dm_account_api=account, mailhog=mailhog_api)
     account_helper.auth_client(
-        login='IM_test_q11',
+        login="IM_test_q3",
         password="pass123456"
     )
     return account_helper

@@ -24,9 +24,10 @@ def test_post_v1_account_login():
     account = DMApiAccount(configuration=dm_api_configuration)
     mailhog = MailHogApi(configuration=mailhog_configuration)
     account_helper = AccountHelper(dm_account_api=account, mailhog=mailhog)
-    login = 'IM_test_e30'
+    login = 'IM_test_q33'
     email = f'{login}@mail.com'
     password = 'pass123456'
+
     account_helper.register_new_user(login=login, password=password, email=email)
     account_helper.user_login(login=login, password=password)
     account_helper.activate_user_after_changing_mail(login=login, password=password)
