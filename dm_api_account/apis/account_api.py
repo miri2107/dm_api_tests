@@ -126,7 +126,7 @@ class AccountApi(RestClient):
 
     ):
         """
-        Logout as current user
+        Logout as current user from every device
         :param json_data:
         :return:
         """
