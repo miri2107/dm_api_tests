@@ -58,7 +58,6 @@ def prepare_user():
     return user
 
 
-
 @pytest.fixture(scope="class")
 def auth_account_helper(
         mailhog_api
@@ -73,4 +72,3 @@ def auth_account_helper(
         password="pass123456"
     )
     return account_helper
-
