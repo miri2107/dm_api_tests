@@ -1,7 +1,7 @@
 def test_get_v1_account_auth(
         prepare_user,
-        auth_account_helper,
         account_helper,
+        auth_account_helper,
 
 ):
     login = prepare_user.login
@@ -13,7 +13,7 @@ def test_get_v1_account_auth(
     auth_account_helper.dm_account_api.account_api.get_v1_account()
 
 
-def test_get_v1_account_no_auth2(
+def test_get_v1_account_no_auth(
         account_helper,
         prepare_user
 ):
@@ -22,5 +22,5 @@ def test_get_v1_account_no_auth2(
     email = prepare_user.email
 
     account_helper.register_new_user(login=login, password=password, email=email)
-    (account_helper.user_login(login=login, password=password))
+    account_helper.user_login(login=login, password=password)
     account_helper.dm_account_api.account_api.get_v1_account()

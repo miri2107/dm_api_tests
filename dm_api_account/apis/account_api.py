@@ -34,7 +34,6 @@ class AccountApi(RestClient):
         )
         return response
 
-    # ---------------------
     def post_v1_account_password(
             self,
             json_data,
@@ -68,8 +67,6 @@ class AccountApi(RestClient):
             **kwargs
         )
         return response
-
-    # -----------------------
 
     def put_v1_account_token(
             self,

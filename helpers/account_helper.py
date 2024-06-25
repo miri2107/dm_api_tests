@@ -114,6 +114,7 @@ class AccountHelper:
             'rememberMe': remember_me,
         }
         response = self.dm_account_api.login_api.post_v1_account_login(json_data=json_data)
+
         assert response.status_code == 200, "User not logged in"
         return response
 
@@ -166,3 +167,25 @@ class AccountHelper:
             if user_login == login:
                 token = reset_token.split('/')[-1]
             return token
+
+    def user_logout(
+            self,
+            login: str,
+            email: str,
+            password: str
+    ):
+
+        self.register_new_user(login=login, password=password, email=email)
+        self.auth_client(login=login, password=password)
+        self.dm_account_api.account_api.delete_v1_account_login()
+
+    def user_logout_all(
+            self,
+            login: str,
+            email: str,
+            password: str
+    ):
+
+        self.register_new_user(login=login, password=password, email=email)
+        self.auth_client(login=login, password=password)
+        self.dm_account_api.account_api.delete_v1_account_login_all()

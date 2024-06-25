@@ -1,4 +1,4 @@
-def test_get_v1_account_change_password(
+def test_put_v1_account_password(
         account_helper,
         prepare_user,
         auth_account_helper
