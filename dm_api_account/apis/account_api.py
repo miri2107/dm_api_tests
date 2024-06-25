@@ -1,5 +1,6 @@
 import requests
 
+from dm_api_account.models.registration import Registration
 from restclient.client import RestClient
 
 
@@ -7,16 +8,15 @@ class AccountApi(RestClient):
 
     def post_v1_account(
             self,
-            json_data
+            registration: Registration
     ):
         """
         Register new user
-        :param json_data:
         :return:
         """
         response = self.post(
             path=f'/v1/account',
-            json=json_data
+            json=registration.model_dump(exclude_none=True, by_alias=True)
         )
         return response
 

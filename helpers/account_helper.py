@@ -3,6 +3,8 @@ from json import loads
 
 from retrying import retry
 
+from dm_api_account.models.login_credentials import LoginCredentials
+from dm_api_account.models.registration import Registration
 from services.dm_api_account import DMApiAccount
 from services.api_mailhog import MailHogApi
 
@@ -64,13 +66,13 @@ class AccountHelper:
             password: str,
             email: str
     ):
-        json_data = {
-            'login': login,
-            'email': email,
-            'password': password,
-        }
+        registration = Registration(
+            login=login,
+            password=password,
+            email=email
+        )
 
-        response = self.dm_account_api.account_api.post_v1_account(json_data=json_data)
+        response = self.dm_account_api.account_api.post_v1_account(registration=registration)
         assert response.status_code == 201, f"User wasn't created {response.json()}"
         start_time = time.time()
         token = self.get_activation_token_by_login(login=login)
@@ -107,12 +109,12 @@ class AccountHelper:
             password: str,
             remember_me: bool = True
     ):
-        json_data = {
-            'login': login,
-            'password': password,
-            'rememberMe': remember_me,
-        }
-        response = self.dm_account_api.login_api.post_v1_account_login(json_data=json_data)
+        login_credentials = LoginCredentials(
+            login=login,
+            password=password,
+            remember_me=remember_me
+        )
+        response = self.dm_account_api.login_api.post_v1_account_login(login_credentials=login_credentials)
         assert response.headers["x-dm-auth-token"], "Authorisation token not received"
         assert response.status_code == 200, "User not logged in"
         return response
