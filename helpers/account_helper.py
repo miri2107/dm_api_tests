@@ -141,6 +141,12 @@ class AccountHelper:
             password: str,
             new_password: str
     ):
+        """
+        authorisation token will be received in auth_client in test function
+        and used via auth_account_helper
+        :param login, email, password:
+        :return:
+        """
         json_data = {
             'login': login,
             'oldPassword': password,
@@ -175,8 +181,7 @@ class AccountHelper:
             password: str
     ):
 
-        self.register_new_user(login=login, password=password, email=email)
-        self.auth_client(login=login, password=password)
+        self.create_user(login=login, password=password, email=email)
         self.dm_account_api.account_api.delete_v1_account_login()
 
     def user_logout_all(
@@ -186,6 +191,19 @@ class AccountHelper:
             password: str
     ):
 
+        self.create_user(login=login, password=password, email=email)
+        self.dm_account_api.account_api.delete_v1_account_login_all()
+
+    def create_user(
+            self,
+            login: str,
+            email: str,
+            password: str
+    ):
+        """
+        register user and get authorisation token
+        :param login, email, password:
+        :return:
+        """
         self.register_new_user(login=login, password=password, email=email)
         self.auth_client(login=login, password=password)
-        self.dm_account_api.account_api.delete_v1_account_login_all()
