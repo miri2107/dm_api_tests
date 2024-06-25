@@ -24,7 +24,7 @@ def test_post_v1_account_login():
     account = DMApiAccount(configuration=dm_api_configuration)
     mailhog = MailHogApi(configuration=mailhog_configuration)
     account_helper = AccountHelper(dm_account_api=account, mailhog=mailhog)
-    login = 'IM_test_q33'
+    login = 'IM_test_q35'
     email = f'{login}@mail.com'
     password = 'pass123456'
 
