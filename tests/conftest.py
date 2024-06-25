@@ -45,7 +45,20 @@ def account_helper(
     return account_helper
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="class")
+def prepare_user():
+    now = datetime.now()
+    date = now.strftime("%d_%m_%Y_%H_%M_%S")
+    login = f'IM_test_{date}'
+    email = f'{login}@mail.com'
+    password = 'pass123456'
+    new_password = 'pass_new'
+    User = namedtuple("User", ["login", "password", "email", "new_password"])
+    user = User(login=login, password=password, email=email, new_password=new_password)
+    return user
+
+
+@pytest.fixture(scope="class")
 def auth_account_helper(
         mailhog_api
 ):
@@ -55,19 +68,7 @@ def auth_account_helper(
     account = DMApiAccount(configuration=dm_api_configuration)
     account_helper = AccountHelper(dm_account_api=account, mailhog=mailhog_api)
     account_helper.auth_client(
-        login="IM_test_q3",
+        login='IM_test_q11',
         password="pass123456"
     )
     return account_helper
-
-
-@pytest.fixture
-def prepare_user():
-    now = datetime.now()
-    date = now.strftime("%d_%m_%Y_%H_%M_%S")
-    login = f'IM_test_{date}'
-    email = f'{login}@mail.com'
-    password = 'pass123456'
-    User = namedtuple("User", ["login", "password", "email"])
-    user = User(login=login, password=password, email=email)
-    return user
