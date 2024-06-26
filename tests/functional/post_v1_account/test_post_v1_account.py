@@ -7,5 +7,5 @@ def test_post_v1_account(
     email = prepare_user.email
 
     response = account_helper.register_new_user(login=login, password=password, email=email)
-    print(response.resource.login)
+    print(response)
     account_helper.user_login(login=login, password=password)

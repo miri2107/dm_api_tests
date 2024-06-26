@@ -22,5 +22,4 @@ class LoginApi(RestClient):
         )
         if validate_response:
             return UserEnvelope(**response.json())
-
         return response

@@ -5,8 +5,7 @@ from pydantic import (
 )
 
 
-class Registration(BaseModel):
+class ResetPassword(BaseModel):
     model_config = ConfigDict(extra='forbid')
-    login: str = Field(..., description="User login", alias='login')
-    password: str = Field(..., description="User password")
+    login: str = Field(..., description="User login")
     email: str = Field(..., description="User email")

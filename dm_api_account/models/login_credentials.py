@@ -1,4 +1,9 @@
-from pydantic import BaseModel, Field, ConfigDict
+from pydantic import (
+    BaseModel,
+    Field,
+    ConfigDict,
+)
+
 
 class LoginCredentials(BaseModel):
     model_config = ConfigDict(extra='forbid')

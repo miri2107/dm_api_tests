@@ -3,8 +3,11 @@ from json import loads
 
 from retrying import retry
 
+from dm_api_account.models.change_email import ChangeEmail
+from dm_api_account.models.change_password import ChangePassword
 from dm_api_account.models.login_credentials import LoginCredentials
 from dm_api_account.models.registration import Registration
+from dm_api_account.models.reset_password import ResetPassword
 from services.dm_api_account import DMApiAccount
 from services.api_mailhog import MailHogApi
 
@@ -89,18 +92,20 @@ class AccountHelper:
             password: str,
 
     ):
-        change_mail_data = {
-            'login': login,
-            'email': f'{login}_upd@mail.com',
-            'password': password,
 
-        }
-        response = self.dm_account_api.account_api.put_v1_account_email(json_data=change_mail_data)
-        assert response.status_code == 200, "Email was not changed"
+        change_email = ChangeEmail(
+            login=login,
+            password=password,
+            email='new_email@mail.com'
+
+        )
+        self.dm_account_api.account_api.put_v1_account_email(
+            change_email=change_email
+        )
+
         token = self.get_activation_token_by_login(login=login)
         assert token is not None, f"Token not received for user {login}"
         response = self.dm_account_api.account_api.put_v1_account_token(token=token)
-        assert response.status_code == 200, "User not activated"
         return response
 
     def user_login(
@@ -141,9 +146,9 @@ class AccountHelper:
     def change_user_password(
             self,
             login: str,
-            email: str,
             password: str,
-            new_password: str
+            new_password: str,
+            email: str
     ):
         """
         authorisation token will be received in auth_client in test function
@@ -151,16 +156,20 @@ class AccountHelper:
         :param login, email, password:
         :return:
         """
-        json_data = {
-            'login': login,
-            'oldPassword': password,
-            'email': email,
-            'newPassword': new_password
-        }
+        reset_password = ResetPassword(
+            login=login,
+            email=email
+        )
 
-        self.dm_account_api.account_api.post_v1_account_password(json_data=json_data)
+        change_password = ChangePassword(
+            login=login,
+            oldPassword=password,
+            newPassword=new_password
+        )
+
+        self.dm_account_api.account_api.post_v1_account_password(reset_password=reset_password)
         self.get_activation_token_on_changing_password(login=login)
-        self.dm_account_api.account_api.put_v1_account_password(json_data=json_data)
+        self.dm_account_api.account_api.put_v1_account_password(change_password=change_password)
 
     @retry(stop_max_attempt_number=5, retry_on_result=retry_if_result_none, wait_fixed=1000)
     def get_activation_token_on_changing_password(
