@@ -80,7 +80,7 @@ class AccountHelper:
         assert end_time - start_time < 4, "Exceeded the time to activate the user"
         assert token is not None, f"Token not received for user {login}"
         response = self.dm_account_api.account_api.put_v1_account_token(token=token)
-        assert response.status_code == 200, "User not activated"
+
         return response
 
     def activate_user_after_changing_mail(
@@ -107,14 +107,17 @@ class AccountHelper:
             self,
             login: str,
             password: str,
-            remember_me: bool = True
+            remember_me: bool = True,
+            validate_response=False
     ):
         login_credentials = LoginCredentials(
             login=login,
             password=password,
             remember_me=remember_me
         )
-        response = self.dm_account_api.login_api.post_v1_account_login(login_credentials=login_credentials)
+        response = self.dm_account_api.login_api.post_v1_account_login(
+            login_credentials=login_credentials, validate_response=validate_response
+        )
         assert response.headers["x-dm-auth-token"], "Authorisation token not received"
         assert response.status_code == 200, "User not logged in"
         return response

@@ -1,6 +1,7 @@
 import requests
 
 from dm_api_account.models.registration import Registration
+from dm_api_account.models.user_envelope import UserEnvelope
 from restclient.client import RestClient
 
 
@@ -32,6 +33,7 @@ class AccountApi(RestClient):
             path=f'/v1/account',
             **kwargs
         )
+        # UserEnvelope(**response.json())
         return response
 
     def post_v1_account_password(
@@ -70,7 +72,8 @@ class AccountApi(RestClient):
 
     def put_v1_account_token(
             self,
-            token
+            token,
+            validate_response=True
     ):
         headers = {
             'accept': 'text/plain',
@@ -84,6 +87,8 @@ class AccountApi(RestClient):
             path=f'/v1/account/{token}',
             headers=headers
         )
+        if validate_response:
+            return UserEnvelope(**response.json())
         return response
 
     def put_v1_account_email(
