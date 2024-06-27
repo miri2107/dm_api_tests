@@ -23,8 +23,9 @@ class AccountApi(RestClient):
         )
         return response
 
-    def get_v1_account(
+        def get_v1_account(
             self,
+            validate_response=True,
             **kwargs
     ):
         """
@@ -35,7 +36,9 @@ class AccountApi(RestClient):
             path=f'/v1/account',
             **kwargs
         )
-        UserDetailsEnvelope(**response.json())
+        if validate_response:
+            return UserEnvelope(**response.json())
+
         return response
 
     def post_v1_account_password(
