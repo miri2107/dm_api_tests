@@ -32,6 +32,7 @@ class AccountApi(RestClient):
         Get current user
         :return:
         """
+        # TODO change something
         response = self.get(
             path=f'/v1/account',
             **kwargs
