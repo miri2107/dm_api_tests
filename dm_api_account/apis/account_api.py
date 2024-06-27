@@ -25,18 +25,20 @@ class AccountApi(RestClient):
 
     def get_v1_account(
             self,
+            validate_response=True,
             **kwargs
     ):
         """
         Get current user
         :return:
         """
-        # TODO change something
+
         response = self.get(
             path=f'/v1/account',
             **kwargs
         )
-        UserDetailsEnvelope(**response.json())
+        if validate_response:
+            return UserEnvelope(**response.json())
         return response
 
     def post_v1_account_password(
