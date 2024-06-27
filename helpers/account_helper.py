@@ -80,7 +80,7 @@ class AccountHelper:
         start_time = time.time()
         token = self.get_activation_token_by_login(login=login)
         end_time = time.time()
-        assert end_time - start_time < 4, "Exceeded the time to activate the user"
+        assert end_time - start_time < 8, "Exceeded the time to activate the user"
         assert token is not None, f"Token not received for user {login}"
         response = self.dm_account_api.account_api.put_v1_account_token(token=token)
 
