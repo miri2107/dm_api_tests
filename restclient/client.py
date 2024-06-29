@@ -20,7 +20,10 @@ class RestClient:
         self.session = session()
         self.log = structlog.get_logger(__name__).bind(service='api')
 
-    def set_headers(self, headers):
+    def set_headers(
+            self,
+            headers
+            ):
         if headers:
             self.session.headers.update(headers)
 
@@ -90,7 +93,8 @@ class RestClient:
 
     @staticmethod
     def _get_json(
-            rest_response):
+            rest_response
+    ):
         try:
             return rest_response.json()
         except JSONDecodeError:
