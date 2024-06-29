@@ -20,11 +20,16 @@ response = requests.post(
     json=json
 )
 
+
+
+
 url = 'http://5.63.153.31:5051/v1/account/1efe497a-e32c-4b3c-804c-a7c0c7a001d9'
 
 headers = {
     'accept': 'text/plain',
 }
+
+
 
 response = requests.put(
     url=url,
