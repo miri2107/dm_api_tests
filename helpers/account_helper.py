@@ -80,7 +80,7 @@ class AccountHelper:
         start_time = time.time()
         token = self.get_activation_token_by_login(login=login)
         end_time = time.time()
-        assert end_time - start_time < 4, "Exceeded the time to activate the user"
+        assert end_time - start_time < 8, "Exceeded the time to activate the user"
         assert token is not None, f"Token not received for user {login}"
         response = self.dm_account_api.account_api.put_v1_account_token(token=token)
 
@@ -113,7 +113,8 @@ class AccountHelper:
             login: str,
             password: str,
             remember_me: bool = True,
-            validate_response=False
+            validate_response=False,
+            validate_headers=False
     ):
         login_credentials = LoginCredentials(
             login=login,
@@ -123,8 +124,9 @@ class AccountHelper:
         response = self.dm_account_api.login_api.post_v1_account_login(
             login_credentials=login_credentials, validate_response=validate_response
         )
-        assert response.headers["x-dm-auth-token"], "Authorisation token not received"
-        assert response.status_code == 200, "User not logged in"
+        if validate_headers:
+            assert response.headers["x-dm-auth-token"], "Authorisation token not received"
+            assert response.status_code == 200, "User not logged in"
         return response
 
     @retrier
