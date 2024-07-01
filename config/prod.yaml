@@ -1,0 +1,7 @@
+service:
+  dm_api_account: 'http://5.63.153.31:5051'
+  mailhog: 'http://5.63.153.31:5025'
+
+user:
+  login: "IM_test_q3"
+  password: "pass123456"
