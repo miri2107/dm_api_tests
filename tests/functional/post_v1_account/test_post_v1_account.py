@@ -13,12 +13,17 @@ from hamcrest import (
     has_properties,
 )
 
+from assertpy import (
+    soft_assertions,
+    assert_that,
+)
+
 data = [
     # Positive test: correct registration data
     {
-        "login": "my_login44",
+        "login": "my_login45",
         "password": "pass123456",
-        "email": "email_44@mail.com",
+        "email": "email_45@mail.com",
         "expected_status_code": 200,
 
     },
@@ -67,6 +72,8 @@ def test_post_v1_account(
         print(response)
         if response:
             response = account_helper.user_login(login=login, password=password, validate_response=True)
+            today = datetime.now().strftime('%Y-%m-%d')
+            print(today)
 
             assert_that(
                 response, all_of(
