@@ -19,9 +19,6 @@ def test_get_v1_account_auth(
         GetV1Account.check_response_values(response)
 
 
-
-
-
 def test_get_v1_account_no_auth(
         account_helper,
         prepare_user

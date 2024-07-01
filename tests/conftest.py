@@ -29,8 +29,12 @@ options = (
     'service.login',
     'service.password'
 )
+
+
 @pytest.fixture(scope="session", autouse=True)
-def set_config(request):
+def set_config(
+        request
+        ):
     config = Path(__file__).joinpath('../../').joinpath('config')
     config_name = request.config.getoption('--env')
     v.set_config_name(config_name)
@@ -40,15 +44,16 @@ def set_config(request):
         v.set(f'{option}', request.config.getoption(f'--{option}'))
 
 
-
-
-def pytest_addoption(parser):
-    parser.addoption('--env',  action='store', default='stg', help='run stg')
+def pytest_addoption(
+        parser
+        ):
+    parser.addoption('--env', action='store', default='stg', help='run stg')
 
     for option in options:
         parser.addoption(f'--{option}', action='store', default=None)
 
-@pytest.fixture(scope='session' )
+
+@pytest.fixture(scope='session')
 def mailhog_api():
     mailhog_configuration = MailhogConfiguration(host=v.get("service.mailhog"))
     mailhog_client = MailHogApi(configuration=mailhog_configuration)
@@ -99,4 +104,3 @@ def auth_account_helper(
         password=v.get('user.password')
     )
     return account_helper
-
