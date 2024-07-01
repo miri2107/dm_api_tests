@@ -75,7 +75,7 @@ class AccountHelper:
             email=email
         )
 
-        response = self.dm_account_api.account_api.post_v1_account(registration=registration)
+        self.dm_account_api.account_api.post_v1_account(registration=registration)
 
         start_time = time.time()
         token = self.get_activation_token_by_login(login=login)
