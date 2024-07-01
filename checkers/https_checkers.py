@@ -1,6 +1,5 @@
 import requests
 
-
 from contextlib import contextmanager
 from requests.exceptions import HTTPError
 

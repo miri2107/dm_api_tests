@@ -1,5 +1,3 @@
-import pytest
-
 from checkers.https_checkers import check_status_code_http
 from hamcrest import (
     assert_that,
@@ -19,6 +17,7 @@ def test_get_v1_account_auth(
     email = prepare_user.email
 
     auth_account_helper.create_user(login=login, password=password, email=email)
+
     with check_status_code_http(200):
         response = auth_account_helper.dm_account_api.account_api.get_v1_account()
         print(response)
