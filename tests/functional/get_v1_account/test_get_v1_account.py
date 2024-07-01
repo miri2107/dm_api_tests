@@ -1,10 +1,5 @@
+from checkers.get_v1_account import GetV1Account
 from checkers.https_checkers import check_status_code_http
-from hamcrest import (
-    assert_that,
-    has_property,
-    has_properties,
-    has_item,
-)
 
 
 def test_get_v1_account_auth(
@@ -21,16 +16,10 @@ def test_get_v1_account_auth(
     with check_status_code_http(200):
         response = auth_account_helper.dm_account_api.account_api.get_v1_account()
         print(response)
-        assert_that(
-            response,
-            has_property('resource', has_property('roles', has_item('Player'))),
-            has_properties(
-                {
-                    'medium_picture_url': 'No',
-                    'status': 'None'
-                }
-            )
-        )
+        GetV1Account.check_response_values(response)
+
+
+
 
 
 def test_get_v1_account_no_auth(
