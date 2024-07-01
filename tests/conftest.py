@@ -55,6 +55,7 @@ def prepare_user():
     new_password = 'pass_new'
     User = namedtuple("User", ["login", "password", "email", "new_password"])
     user = User(login=login, password=password, email=email, new_password=new_password)
+    print(login, email)
     return user
 
 
