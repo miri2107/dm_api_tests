@@ -1,7 +1,11 @@
 from checkers.get_v1_account import GetV1Account
 from checkers.https_checkers import check_status_code_http
+import allure
 
 
+@allure.suite('Tests to validate method GET /v1/account')
+@allure.sub_suite('Tests positive')
+@allure.title('Check getting user info for authorised client')
 def test_get_v1_account_auth(
         prepare_user,
         account_helper,
@@ -19,6 +23,9 @@ def test_get_v1_account_auth(
         GetV1Account.check_response_values(response)
 
 
+@allure.suite('Tests to validate method GET /v1/account')
+@allure.sub_suite('Tests positive')
+@allure.title('Check getting user info for non-authorised client')
 def test_get_v1_account_no_auth(
         account_helper,
         prepare_user
