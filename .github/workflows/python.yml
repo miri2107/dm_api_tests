@@ -2,6 +2,11 @@ name: Python Tests
 
 on: [ pull_request ]
 
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
 jobs:
   test:
     name: Python tests
