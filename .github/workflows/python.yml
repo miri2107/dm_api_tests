@@ -20,11 +20,45 @@ jobs:
 
       - name: Run tests
         run: |
-          pytest ./tests
-            
-          
+          pytest ./tests --alluredir=allure-results --disable-warnings
+        continue-on-error: true
 
+      - name: Archive allure results
+        uses: actions/upload-artifact@v3
+        with:
+          name: allure-results
+          path: allure-results
+          retention-days: 1
 
+  generate-report:
+    runs-on: ubuntu-latest
+    needs: test
+    name: Generate report
+    steps:
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'microsoft'
+          java-version: '17'
+      - run: sudo wget https://github.com/allure-framework/allure2/releases/download/2.29.0/allure-2.29.0.tgz && sudo tar -xvzf allure-2.29.0.tgz -C /opt/ && sudo ln -s /opt/allure-2.29.0/bin/allure /usr/bin/allure
+      - name: Download allure results
+        uses: actions/download-artifact@v3
+      - run: allure generate -c allure-results -o _site
+      - name: Store report
+        uses: actions/upload-artifact@v3
+        with:
+          name: _site
+          path: _site
+          retention-days: 1
 
-
-
+  publish-report:
+    runs-on: ubuntu-latest
+    needs: generate-report
+    name: Publish report
+    steps:
+      - name: Download allure results
+        uses: actions/download-artifact@v3
+      - name: Upload allure report
+        uses: actions/upload-pages-artifact@v2
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v1.2.9
