@@ -1,3 +1,9 @@
+import allure
+
+
+@allure.suite('Tests to validate method DELETE /v1/account/login ')
+@allure.sub_suite('Tests positive')
+@allure.title('Check user logout')
 def test_delete_v1_account_login(
         prepare_user,
         auth_account_helper,

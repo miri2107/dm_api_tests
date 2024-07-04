@@ -1,3 +1,9 @@
+import allure
+
+
+@allure.suite('Tests to validate method PUT /v1/account/password ')
+@allure.sub_suite('Tests positive')
+@allure.title('Check changing password for user')
 def test_put_v1_account_password(
         account_helper,
         prepare_user,

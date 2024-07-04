@@ -1,6 +1,7 @@
 import time
 from json import loads
 
+import allure
 from retrying import retry
 
 from dm_api_account.models.change_email import ChangeEmail
@@ -63,6 +64,7 @@ class AccountHelper:
         self.dm_account_api.account_api.set_headers(token)
         self.dm_account_api.login_api.set_headers(token)
 
+    @allure.step('New user registration')
     def register_new_user(
             self,
             login: str,
@@ -86,6 +88,7 @@ class AccountHelper:
 
         return response
 
+    @allure.step("Change user's email")
     def activate_user_after_changing_mail(
             self,
             login: str,
@@ -108,6 +111,7 @@ class AccountHelper:
         response = self.dm_account_api.account_api.put_v1_account_token(token=token)
         return response
 
+    @allure.step('User Authentication')
     def user_login(
             self,
             login: str,
@@ -144,6 +148,7 @@ class AccountHelper:
 
         return token
 
+    @allure.step('Set new password')
     def change_user_password(
             self,
             login: str,

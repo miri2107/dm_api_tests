@@ -1,3 +1,4 @@
+import allure
 import requests
 
 from dm_api_account.models.login_credentials import LoginCredentials
@@ -7,6 +8,7 @@ from restclient.client import RestClient
 
 class LoginApi(RestClient):
 
+    @allure.step('Send login request ')
     def post_v1_account_login(
             self,
             login_credentials: LoginCredentials,
