@@ -5,6 +5,7 @@ from checkers.https_checkers import check_status_code_http
 from datetime import datetime
 
 from checkers.post_v1_account import PostV1Account
+from helpers.dm_db import DmDataBase
 
 now = datetime.now()
 current_time = now.strftime("%d%H%M%S")
@@ -63,6 +64,9 @@ class TestsPostV1Account:
         email = test_data.get('email')
         expected_message = test_data.get('expected_message')
         expected_status_code = test_data.get('expected_status_code')
+
+        db = DmDataBase('postgres', 'admin', '5.63.153.31', 'dm3.5')
+
         with check_status_code_http(expected_status_code, expected_message):
             response = account_helper.register_new_user(login=login, password=password, email=email)
             print(response)
