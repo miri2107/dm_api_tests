@@ -1,3 +1,10 @@
+import allure
+
+
+@allure.suite('Tests to validate method PUT /v1/account/{token} ')
+@allure.sub_suite('Tests positive')
+@allure.title('Check getting user authentication token')
+
 def test_put_v1_account_token(
         account_helper,
         prepare_user

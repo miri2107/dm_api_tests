@@ -1,3 +1,5 @@
+import allure
+
 from dm_api_account.models.change_email import ChangeEmail
 from dm_api_account.models.change_password import ChangePassword
 from dm_api_account.models.registration import Registration
@@ -9,6 +11,7 @@ from restclient.client import RestClient
 
 class AccountApi(RestClient):
 
+    @allure.step('User Registration ')
     def post_v1_account(
             self,
             registration: Registration
@@ -23,6 +26,7 @@ class AccountApi(RestClient):
         )
         return response
 
+    @allure.step('Get User info ')
     def get_v1_account(
             self,
             validate_response=True,
@@ -41,6 +45,7 @@ class AccountApi(RestClient):
             return UserEnvelope(**response.json())
         return response
 
+    @allure.step('Reset user password')
     def post_v1_account_password(
             self,
             reset_password: ResetPassword
@@ -58,6 +63,7 @@ class AccountApi(RestClient):
         )
         return response
 
+    @allure.step('Set new password ')
     def put_v1_account_password(
             self,
             change_password: ChangePassword,
@@ -78,6 +84,7 @@ class AccountApi(RestClient):
             return UserEnvelope(**response.json())
         return response
 
+    @allure.step('User Activation')
     def put_v1_account_token(
             self,
             token,
@@ -99,6 +106,7 @@ class AccountApi(RestClient):
             return UserEnvelope(**response.json())
         return response
 
+    @allure.step('Set new email address')
     def put_v1_account_email(
             self,
             change_email: ChangeEmail,
@@ -117,6 +125,7 @@ class AccountApi(RestClient):
             return UserEnvelope(**response.json())
         return response
 
+    @allure.step('User logout ')
     def delete_v1_account_login(
             self,
             **kwargs
@@ -133,6 +142,7 @@ class AccountApi(RestClient):
         )
         return response
 
+    @allure.step('User Logout  on all devices ')
     def delete_v1_account_login_all(
             self,
             **kwargs

@@ -1,3 +1,4 @@
+import allure
 import pytest
 from checkers.https_checkers import check_status_code_http
 
@@ -11,7 +12,7 @@ current_time = now.strftime("%d%H%M%S")
 data = [
     # Positive test: correct registration data
     {
-       "login": f"my_login_{current_time}",
+        "login": f"my_login_{current_time}",
         "password": "pass123456",
         "email": f"email_{current_time}@mail.com",
         "expected_status_code": 200,
@@ -46,22 +47,25 @@ data = [
 ]
 
 
-@pytest.mark.parametrize('test_data', data)
-def test_post_v1_account(
-        account_helper,
-        test_data
-):
-    login = test_data.get('login')
-    password = test_data.get('password')
-    email = test_data.get('email')
-    expected_message = test_data.get('expected_message')
-    expected_status_code = test_data.get('expected_status_code')
+@allure.suite('Tests to validate method POST /v1/account ')
+@allure.sub_suite('Tests positive')
+class TestsPostV1Account:
 
-    with check_status_code_http(expected_status_code, expected_message):
-        response = account_helper.register_new_user(login=login, password=password, email=email)
-        print(response)
-        if response:
-            response = account_helper.user_login(login=login, password=password, validate_response=True)
-            PostV1Account.check_response_values(response)
-
-
+    @allure.title('Check new user registration')
+    @pytest.mark.parametrize('test_data', data)
+    def test_post_v1_account(
+            self,
+            account_helper,
+            test_data
+    ):
+        login = test_data.get('login')
+        password = test_data.get('password')
+        email = test_data.get('email')
+        expected_message = test_data.get('expected_message')
+        expected_status_code = test_data.get('expected_status_code')
+        with check_status_code_http(expected_status_code, expected_message):
+            response = account_helper.register_new_user(login=login, password=password, email=email)
+            print(response)
+            if response:
+                response = account_helper.user_login(login=login, password=password, validate_response=True)
+                PostV1Account.check_response_values(response)

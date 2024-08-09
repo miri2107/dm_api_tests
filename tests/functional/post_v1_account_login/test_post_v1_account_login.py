@@ -3,8 +3,12 @@ from assertpy import (
     assert_that,
 )
 from dm_api_account.models.user_details_envelope import UserRole
+import allure
 
 
+@allure.suite('Tests to validate method POST /v1/account/login ')
+@allure.sub_suite('Tests positive')
+@allure.title('Check user login')
 def test_post_v1_account_login(
         account_helper,
         prepare_user

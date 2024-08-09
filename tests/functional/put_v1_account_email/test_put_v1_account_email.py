@@ -1,3 +1,9 @@
+import allure
+
+
+@allure.suite('Tests to validate method PUT /v1/account/email ')
+@allure.sub_suite('Tests positive')
+@allure.title('Check changing email for user')
 def test_put_v1_account_email(
         account_helper,
         prepare_user
