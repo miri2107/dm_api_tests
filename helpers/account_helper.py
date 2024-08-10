@@ -9,6 +9,7 @@ from dm_api_account.models.change_password import ChangePassword
 from dm_api_account.models.login_credentials import LoginCredentials
 from dm_api_account.models.registration import Registration
 from dm_api_account.models.reset_password import ResetPassword
+from helpers.dm_db import DmDataBase
 from services.dm_api_account import DMApiAccount
 from services.api_mailhog import MailHogApi
 
@@ -51,6 +52,8 @@ class AccountHelper:
         self.dm_account_api = dm_account_api
         self.mailhog = mailhog
 
+    db = DmDataBase('postgres', 'admin', '5.63.153.31', 'dm3.5')
+
     def auth_client(
             self,
             login: str,
@@ -76,9 +79,37 @@ class AccountHelper:
             password=password,
             email=email
         )
+        self.send_registration_request(registration=registration)
+        response = self.send_activation_request(login=login)
+        return response
 
-        self.dm_account_api.account_api.post_v1_account(registration=registration)
+    @allure.step('Send registration request')
+    def send_registration_request(
+            self,
+            login: str,
+            password: str,
+            email: str
+    ):
+        registration = Registration(
+            login=login,
+            password=password,
+            email=email
+        )
+        response = self.dm_account_api.account_api.post_v1_account(registration=registration)
 
+        dataset = self.db.get_user_by_login(login=login)
+        for row in dataset:
+            assert row['Login'] == login, f'User {login} not registered'
+            assert row['Activated'] is False, f'User {login}  activated'
+        print(dataset)
+        return response
+
+    @allure.step('Send activation request')
+    def send_activation_request(
+            self,
+            login: str
+    ):
+        login = login
         start_time = time.time()
         token = self.get_activation_token_by_login(login=login)
         end_time = time.time()
@@ -86,6 +117,10 @@ class AccountHelper:
         assert token is not None, f"Token not received for user {login}"
         response = self.dm_account_api.account_api.put_v1_account_token(token=token)
 
+        dataset = self.db.get_user_by_login(login=login)
+        for row in dataset:
+            assert row['Activated'] is True, f'User {login} not activated'
+        print(dataset)
         return response
 
     @allure.step("Change user's email")
