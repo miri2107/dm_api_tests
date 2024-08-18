@@ -47,7 +47,6 @@ class DmDataBase:
         dataset = self.db.send_query(query=query)
         return dataset
 
-
     def delete_user_by_login(
             self,
             login
