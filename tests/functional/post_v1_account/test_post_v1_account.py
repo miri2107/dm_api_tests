@@ -2,9 +2,11 @@ import allure
 import pytest
 from checkers.https_checkers import check_status_code_http
 
+
 from datetime import datetime
 
 from checkers.post_v1_account import PostV1Account
+from helpers.dm_db import DmDataBase
 
 now = datetime.now()
 current_time = now.strftime("%d%H%M%S")
@@ -69,3 +71,23 @@ class TestsPostV1Account:
             if response:
                 response = account_helper.user_login(login=login, password=password, validate_response=True)
                 PostV1Account.check_response_values(response)
+
+    @allure.title('Check user re-activation after activation directly in DataBase')
+    def test_post_v1_account_activate_in_database(
+            self,
+            account_helper,
+
+    ):
+        login = "my_login_565"
+        password = "my_password565"
+        email = "my_login_565@mail.com"
+        db = DmDataBase('postgres', 'admin', '5.63.153.31', 'dm3.5')
+        account_helper.send_registration_request(login=login, password=password, email=email)
+        db.activate_user_by_login(login=login)
+        dataset = db.get_user_by_login(login=login)
+        for row in dataset:
+            assert row['Activated'] is True, f'User {login} is not activated directly in database'
+        print(dataset)
+        response = account_helper.send_activation_request(login=login)
+        print(response)
+        db.delete_user_by_login(login=login)
